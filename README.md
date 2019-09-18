@@ -5,7 +5,9 @@
 # press A to turn the LED on or off
 # ----------------------------------------------------------
 #lht.py - i2C version for ssd1306 display, and i2c interface with SHT20 humidity and temperature sensor and BH1750fvi light meter sensor 
+#
 #lhts.py - SPI version for ssd1306 display,and i2c interface with SHT20 humidity and temperature sensor and BH1750fvi light meter sensor  
+#lhts.mpy - precompiled byte code version of lhts.py
 #lht-DHT11.py - i2C version for ssd1306 display, and one wire interface with DHT-11 humidity and temperature sensor
 #
 # Pins used for SPI version
