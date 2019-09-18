@@ -147,7 +147,7 @@ led = Pin(15, Pin.OUT)
 
 
 # turn off everything
-led.on()
+led.off()
 
   
 
@@ -161,12 +161,12 @@ last_display_ms = 0
 
 ledOn = False
 pumpOn = False
-h = 72.5
+h = 0
 h0 = 1.0
-t = 28.3
+t = 0
 t0 = 1.0
-lux = 1000
-lux0 = 0
+lux = 0
+lux0 = 10
 
 
 
@@ -284,10 +284,7 @@ rtc.datetime(tm)
 
 ContinueOn = True
 while ContinueOn :
-  # Pin 4 and 5 is multiplexed between I2C and Btn ADC control.
-  # set up PIn 4 and 5 for Btn ADC control.
-  pinBtn = Pin(5, Pin.OUT)  
-  pinPaddle = Pin(4, Pin.OUT)
+
   
   getBtn()
   
@@ -298,12 +295,12 @@ while ContinueOn :
     #LED buttun pressed and released
     if ledOn :
       # if led is previously ON, now turn it off by outputing High voltage
-      led.on()
+      led.off()
       msg = "OFF"
       ledOn = False
     else :
       # if led is previously OFF, now turn it on by outputing Low voltage
-      led.off()
+      led.on()
       msg = "ON"
       ledOn = True
 
@@ -316,12 +313,15 @@ while ContinueOn :
     # set up PIn 4 and 5 for I2C
     
     i2c = I2C(-1, Pin(5), Pin(4))   # SCL, SDA
-
-     
     t = sht20_temperature(i2c)
     h = sht20_relative_humidity(i2c)
     lux = bh1750fvi(i2c) 
-
+    
+    # Pin 4 and 5 is multiplexed between I2C and Btn ADC control.
+    # set up PIn 4 and 5 for Btn ADC control.
+    pinBtn = Pin(5, Pin.OUT)  
+    pinPaddle = Pin(4, Pin.OUT)
+    
     if lux != lux0 :
         print('Publish:  lux = {}'.format(lux))
         lux0 = lux
@@ -336,7 +336,6 @@ while ContinueOn :
         t0 = t
         
     last_measure_ms = ticks_ms()
-
 
   if ticks_diff(ticks_ms(), last_display_ms) >= display_period_ms :
     # time to display 
@@ -355,6 +354,10 @@ while ContinueOn :
 
     display.show()  
     last_display_ms = ticks_ms()
+
+i2c.stop()
+pinBtn = Pin(5, Pin.OUT)  
+pinPaddle = Pin(4, Pin.OUT)
 
 
 
